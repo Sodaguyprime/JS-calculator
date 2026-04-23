@@ -1,15 +1,47 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculator</title>
-    <link rel="stylesheet" href="styles/styles.css">
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Calculator</title>
+        <link rel="stylesheet" href="styles/styles.css" />
+    </head>
+    <body>
+  <div class="calculator-Container">
+    <div class="display-area" id="display-area">0</div>
 
+    <div class="Operands-selection">
 
+      <div class="functions">
+        <button onclick="clearAll()">AC</button>
+        <button onclick="toggleSign()">+/-</button>
+        <button onclick="percent()">%</button>
+        <button onclick="setOperator('/')">÷</button>
+      </div>
 
-    <script type="module" src="scripts/main.js"></script>
-</body>
+      <div class="numbers">
+        <button onclick="inputNum('7')">7</button>
+        <button onclick="inputNum('8')">8</button>
+        <button onclick="inputNum('9')">9</button>
+        <button onclick="setOperator('*')">×</button>
+
+        <button onclick="inputNum('4')">4</button>
+        <button onclick="inputNum('5')">5</button>
+        <button onclick="inputNum('6')">6</button>
+        <button onclick="setOperator('-')">−</button>
+
+        <button onclick="inputNum('1')">1</button>
+        <button onclick="inputNum('2')">2</button>
+        <button onclick="inputNum('3')">3</button>
+        <button onclick="setOperator('+')">+</button>
+
+        <button onclick="inputNum('0')" class="zero">0</button>
+        <button onclick="inputDecimal()">.</button>
+        <button onclick="calculate()">=</button>
+      </div>
+
+    </div>
+  </div>
+        <script type="module" src="./scripts/main.js"></script>
+    </body>
 </html>
