@@ -7,6 +7,12 @@ currentInput += digit ;
 result.innerText = currentInput;
 }
 
+const backspace = () => {
+    currentInput = currentInput.slice(0, -1);
+    result.innerText = currentInput || 0;
+    console.log(currentInput)
+}
+
 const clearAll = () => {
     currentInput = "";
     result.innerText = 0;
@@ -59,6 +65,7 @@ const Operate = (operation, num1, num2) => {
 }
 
 const calculate=() => {
+    if (!currentInput || current_number1 === undefined || !current_operand) return;
     if (current_operand && current_number1 !== undefined) {
         current_number2 = parseFloat(currentInput);
         currentInput = "";
