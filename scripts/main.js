@@ -34,8 +34,18 @@ const Divide = (num1,num2) => {
     result.innerText = num1 / num2
 }
 
+const inputDecimal = () => {
+    if (currentInput.includes(".")) return;
+    currentInput += currentInput === "" ? "0." : ".";
+    result.innerText = currentInput;
+    updateDecimalButton();
+}
+
+const updateDecimalButton = () => {
+    const decimalBtn = document.getElementById("decimal-btn");
+    decimalBtn.disabled = currentInput.includes(".");
+}
 const setOperator = (operator) => {
-    current_operand = operator;
     if (current_number1 !== undefined) {
         current_number2 = parseFloat(currentInput);
         currentInput = "";
@@ -45,6 +55,8 @@ const setOperator = (operator) => {
         current_number1 = parseFloat(currentInput);
         currentInput = "";
     }
+    current_operand = operator;
+     updateDecimalButton();
 }
 
 const Operate = (operation, num1, num2) => {
