@@ -80,10 +80,11 @@ const calculate=() => {
     if (!currentInput || current_number1 === undefined || !current_operand) return;
     if (current_operand && current_number1 !== undefined) {
         current_number2 = parseFloat(currentInput);
-        currentInput = "";
-        console.log(current_operand, current_number1, current_number2)
         Operate(current_operand, current_number1, current_number2);
+        currentInput = String(parseFloat(result.innerText));
+        
         current_number1 = undefined;
         current_operand = undefined;
+        updateDecimalButton();
     }
 }
