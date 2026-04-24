@@ -1,12 +1,312 @@
+/* ─── Imports ─────────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&display=swap');
+
+/* ─── Design Tokens ────────────────────────────────────────────────────────── */
+:root {
+  --clr-body-bg:       #1a1814;
+  --clr-calc-body:     #2e2b26;
+  --clr-calc-face:     #3a3630;
+  --clr-trim:          #4a4540;
+  --clr-display-bg:    #0d1a0f;
+  --clr-display-text:  #c8f5a0;
+  --clr-display-dim:   #3a5c2a;
+  --clr-digit-face:    #4d4840;
+  --clr-digit-top:     #5a5348;
+  --clr-digit-shadow:  #252220;
+  --clr-digit-text:    #d4cfc8;
+  --clr-op-face:       #7a5c2e;
+  --clr-op-top:        #9a7438;
+  --clr-op-shadow:     #3a2c10;
+  --clr-op-text:       #f5dfa0;
+  --clr-equals-face:   #5a3a1a;
+  --clr-equals-top:    #8a5a28;
+  --clr-equals-shadow: #2a1a08;
+  --clr-equals-text:   #ffdfa0;
+  --clr-util-face:     #3a3d3a;
+  --clr-util-top:      #4a4f4a;
+  --clr-util-shadow:   #1a1d1a;
+  --clr-util-text:     #a0c8a0;
+  --clr-accent:        #c8f5a0;
+  --clr-error:         #f5a0a0;
+
+  --font-display:      'Share Tech Mono', monospace;
+  --font-label:        'Bebas Neue', cursive;
+
+  --radius-calc:       12px;
+  --radius-key:        6px;
+  --key-press-depth:   3px;
+  --transition-fast:   80ms ease;
+}
+
+/* ─── Reset & Base ─────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  background-color: var(--clr-body-bg);
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% 0%, #2a261e 0%, transparent 70%),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255 255 255 / 0.015) 2px,
+      rgba(255 255 255 / 0.015) 4px
+    );
+  font-family: var(--font-label);
 }
 
-.calculator-Container {
-    border: 1px solid black;
+/* ─── Calculator Shell ─────────────────────────────────────────────────────── */
+.calculator {
+  background: var(--clr-calc-body);
+  border-radius: var(--radius-calc);
+  padding: 20px 18px 24px;
+  width: 320px;
+  box-shadow:
+    0 2px 0 #111 inset,
+    0 -2px 0 #555 inset,
+    0 30px 60px rgba(0 0 0 / 0.7),
+    0 8px 20px rgba(0 0 0 / 0.5);
+  position: relative;
 }
 
+/* Brand strip */
+.calculator::before {
+  content: 'CALCUMATIC  ◆  MODEL 7';
+  display: block;
+  font-family: var(--font-label);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  color: #6a6258;
+  text-align: center;
+  margin-bottom: 14px;
+}
 
+/* ─── Display Panel ────────────────────────────────────────────────────────── */
+.display-panel {
+  background: var(--clr-display-bg);
+  border-radius: 4px;
+  padding: 10px 14px 12px;
+  margin-bottom: 18px;
+  box-shadow:
+    0 0 0 2px #0a0f0a,
+    0 2px 8px rgba(0 0 0 / 0.8) inset,
+    0 0 20px rgba(120 240 80 / 0.05) inset;
+  min-height: 88px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Scanline overlay on display */
+.display-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0 0 0 / 0.12) 3px,
+    rgba(0 0 0 / 0.12) 4px
+  );
+  pointer-events: none;
+}
+
+.display-expression {
+  font-family: var(--font-display);
+  font-size: 13px;
+  color: var(--clr-display-dim);
+  min-height: 20px;
+  text-align: right;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+
+.display-value {
+  font-family: var(--font-display);
+  font-size: 38px;
+  color: var(--clr-display-text);
+  display: block;
+  text-align: right;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow:
+    0 0 8px rgba(180 255 120 / 0.6),
+    0 0 20px rgba(140 255 80 / 0.3);
+  transition: color var(--transition-fast);
+}
+
+.display-value.is-error {
+  color: var(--clr-error);
+  text-shadow: 0 0 8px rgba(255 140 140 / 0.6);
+  font-size: 22px;
+}
+
+/* ─── Keypad Layout ────────────────────────────────────────────────────────── */
+.keypad {
+  display: grid;
+  gap: 10px;
+}
+
+.keypad-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+/* Wide key spans 2 columns */
+.key--wide {
+  grid-column: span 2;
+}
+
+/* ─── Keys — Base ──────────────────────────────────────────────────────────── */
+.key {
+  font-family: var(--font-label);
+  font-size: 22px;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  border: none;
+  border-radius: var(--radius-key);
+  padding: 14px 6px 11px;
+  line-height: 1;
+  position: relative;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    filter var(--transition-fast);
+}
+
+/* Pressed state shared */
+.key:active,
+.key.is-active {
+  transform: translateY(var(--key-press-depth));
+}
+
+/* ─── Digit Keys ───────────────────────────────────────────────────────────── */
+.key--digit {
+  background: var(--clr-digit-top);
+  color: var(--clr-digit-text);
+  box-shadow:
+    0 var(--key-press-depth) 0 var(--clr-digit-shadow),
+    0 1px 0 rgba(255 255 255 / 0.08) inset;
+}
+
+.key--digit:hover {
+  filter: brightness(1.12);
+}
+
+.key--digit:active,
+.key--digit.is-active {
+  box-shadow:
+    0 0 0 var(--clr-digit-shadow),
+    0 1px 0 rgba(255 255 255 / 0.08) inset;
+}
+
+/* ─── Operator Keys ────────────────────────────────────────────────────────── */
+.key--operator {
+  background: var(--clr-op-top);
+  color: var(--clr-op-text);
+  box-shadow:
+    0 var(--key-press-depth) 0 var(--clr-op-shadow),
+    0 1px 0 rgba(255 255 255 / 0.1) inset;
+}
+
+.key--operator:hover {
+  filter: brightness(1.12);
+}
+
+.key--operator:active,
+.key--operator.is-active {
+  box-shadow:
+    0 0 0 var(--clr-op-shadow),
+    0 1px 0 rgba(255 255 255 / 0.1) inset;
+}
+
+.key--operator.is-selected {
+  background: #c8962a;
+  color: #fff8e0;
+  box-shadow:
+    0 var(--key-press-depth) 0 #6a4a10,
+    0 0 10px rgba(200 150 40 / 0.4);
+}
+
+/* ─── Equals Key ───────────────────────────────────────────────────────────── */
+.key--equals {
+  background: var(--clr-equals-top);
+  color: var(--clr-equals-text);
+  box-shadow:
+    0 var(--key-press-depth) 0 var(--clr-equals-shadow),
+    0 1px 0 rgba(255 255 255 / 0.08) inset;
+}
+
+.key--equals:hover {
+  filter: brightness(1.15);
+}
+
+.key--equals:active,
+.key--equals.is-active {
+  box-shadow:
+    0 0 0 var(--clr-equals-shadow),
+    0 1px 0 rgba(255 255 255 / 0.08) inset;
+}
+
+/* ─── Utility Keys (AC, backspace) ────────────────────────────────────────── */
+.key--utility {
+  background: var(--clr-util-top);
+  color: var(--clr-util-text);
+  font-size: 18px;
+  box-shadow:
+    0 var(--key-press-depth) 0 var(--clr-util-shadow),
+    0 1px 0 rgba(255 255 255 / 0.07) inset;
+}
+
+.key--utility:hover {
+  filter: brightness(1.12);
+}
+
+.key--utility:active,
+.key--utility.is-active {
+  box-shadow:
+    0 0 0 var(--clr-util-shadow),
+    0 1px 0 rgba(255 255 255 / 0.07) inset;
+}
+
+/* ─── Disabled State ───────────────────────────────────────────────────────── */
+.key:disabled,
+.key[aria-disabled="true"] {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ─── Focus Visible ────────────────────────────────────────────────────────── */
+.key:focus-visible {
+  outline: 2px solid var(--clr-accent);
+  outline-offset: 2px;
+}
+
+/* ─── Display flash animation ──────────────────────────────────────────────── */
+@keyframes display-flash {
+  0%   { opacity: 1; }
+  30%  { opacity: 0.3; }
+  60%  { opacity: 1; }
+  80%  { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+.display-value.flash {
+  animation: display-flash 200ms ease;
+}
