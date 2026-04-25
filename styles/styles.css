@@ -78,7 +78,7 @@ body {
 
 /* Brand strip */
 .calculator::before {
-  content: 'CALCUMATIC  ◆  MODEL 7';
+  content: 'CALCULATOR';
   display: block;
   font-family: var(--font-label);
   font-size: 10px;

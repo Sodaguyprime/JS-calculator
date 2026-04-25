@@ -11,11 +11,13 @@ const backspace = () => {
     currentInput = currentInput.slice(0, -1);
     result.innerText = currentInput || 0;
     console.log(currentInput)
+    updateDecimalButton();
 }
 
 const clearAll = () => {
     currentInput = "";
     result.innerText = 0;
+    updateDecimalButton();
 }
 
 const Add = (num1,num2) => {
