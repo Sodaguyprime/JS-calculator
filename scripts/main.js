@@ -38,6 +38,9 @@ const backspace = () => {
 const clearAll = () => {
     currentInput = "";
     result.innerText = 0;
+    current_number1 = undefined;
+    current_number2 = undefined;
+    current_operand = undefined;
     updateDecimalButton();
 }
 
@@ -54,6 +57,7 @@ const Multiply = (num1,num2) => {
 }
 
 const Divide = (num1,num2) => {
+    if (num2 === 0) { result.innerText = "plz dont"; return; }
     result.innerText = (num1 / num2).toFixed(7)
 }
 
