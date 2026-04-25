@@ -42,19 +42,19 @@ const clearAll = () => {
 }
 
 const Add = (num1,num2) => {
-    result.innerText = num1+num2
+    result.innerText = (num1+num2).toFixed(7)
 }
 
 const Subtract = (num1,num2) => {
-    result.innerText = num1 - num2
+    result.innerText = (num1 - num2).toFixed(7)
 }
 
 const Multiply = (num1,num2) => {
-    result.innerText = num1 * num2
+    result.innerText = (num1 * num2).toFixed(7)
 }
 
 const Divide = (num1,num2) => {
-    result.innerText = num1 / num2
+    result.innerText = (num1 / num2).toFixed(7)
 }
 
 const inputDecimal = () => {
