@@ -2,6 +2,27 @@ let currentInput = ""
 let result= document.getElementById("display-area");
 let current_operand, current_number1,current_number2;
 
+
+document.addEventListener('keydown', (e) => {
+    const key = e.key;
+    
+    if (/\d/.test(key)) {
+
+        inputNum(key); 
+    } else if (key === '+' || key === '-' || key === '*' || key === '/') {
+        setOperator(key);
+    } else if (key === 'Enter' || key === '=') {
+        e.preventDefault(); 
+        calculate();
+    } else if (key === 'Backspace') {
+        e.preventDefault();
+        backspace();
+    } else if (key === 'Escape') {
+        clearAll();
+    }
+});
+
+
 const inputNum =(digit) =>{
 currentInput += digit ;
 result.innerText = currentInput;
