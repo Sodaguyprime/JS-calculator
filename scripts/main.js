@@ -32,7 +32,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 
-const inputNum =(digit) =>{
+const inputNum = (digit) => {
 
     if (isError) return;
 
@@ -78,19 +78,10 @@ const clearAll = () => {
     updateExpression("");
 }
 
-const Add      = (a, b) => a + b;
-const Subtract = (a, b) => a - b;
-const Multiply = (a, b) => a * b;
-const Divide   = (a, b) => a / b;
-
-// const Divide = (num1,num2) => {
-//     if (num2 === 0) { 
-//         result.innerText = "plz dont"; 
-//         isError = true;
-//         return; 
-//     }
-//     result.innerText = (num1 / num2).toFixed(7)
-// }
+const add      = (a, b) => a + b;
+const subtract = (a, b) => a - b;
+const multiply = (a, b) => a * b;
+const divide   = (a, b) => a / b;
 
 const formatResult = (value) => parseFloat(value.toPrecision(10));
 
@@ -121,7 +112,7 @@ const setOperator = (operator) => {
     if (current_number1 !== undefined) {
         current_number2 = parseFloat(currentInput);
         currentInput = "";
-        Operate(current_operand, current_number1, current_number2);
+        operate(current_operand, current_number1, current_number2);
         current_number1 = parseFloat(result.innerText);
     }else {
         current_number1 = parseFloat(currentInput);
@@ -135,7 +126,7 @@ const setOperator = (operator) => {
     updateExpression(`${current_number1} ${operator}`);
 }
 
-const Operate = (operation, num1, num2) => {
+const operate = (operation, num1, num2) => {
 
     if (operation === '/' && num2 === 0) {
         result.innerText = "plz dont";
@@ -146,16 +137,16 @@ const Operate = (operation, num1, num2) => {
     let value;
     switch (operation) {
         case '+': 
-            value = Add(num1, num2);      
+            value = add(num1, num2);      
         break;
         case '-': 
-            value = Subtract(num1, num2); 
+            value = subtract(num1, num2); 
         break;
         case '*': 
-            value = Multiply(num1, num2); 
+            value = multiply(num1, num2); 
         break;
         case '/': 
-            value = Divide(num1, num2);   
+            value = divide(num1, num2);   
         break;
     }
 
@@ -169,7 +160,7 @@ const calculate=() => {
 
         updateExpression(`${current_number1} ${current_operand} ${current_number2} =`);
 
-        Operate(current_operand, current_number1, current_number2);
+        operate(current_operand, current_number1, current_number2);
         currentInput = String(parseFloat(result.innerText));
         
         current_number1 = undefined;
