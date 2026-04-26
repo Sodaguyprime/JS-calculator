@@ -1,6 +1,15 @@
 let currentInput = ""
 let result= document.getElementById("display-area");
 let current_operand, current_number1,current_number2;
+let isError = false;
+let awaitingSecond = false; 
+let justEvaluated  = false;
+
+const expressionEl = document.getElementById("expression");
+
+const updateExpression = (text) => {
+    expressionEl.textContent = text;
+};
 
 
 document.addEventListener('keydown', (e) => {
@@ -24,11 +33,31 @@ document.addEventListener('keydown', (e) => {
 
 
 const inputNum =(digit) =>{
-currentInput += digit ;
-result.innerText = currentInput;
+
+    if (isError) return;
+
+    if (justEvaluated) {
+        currentInput = "";
+        justEvaluated = false;
+    }
+
+    awaitingSecond = false;
+
+    if (currentInput === "0" && digit === "0") return;
+
+    if (currentInput === "0" && digit !== ".") {
+        currentInput = digit;
+    } else {
+        currentInput += digit;
+    }
+
+    result.innerText = currentInput;
 }
 
 const backspace = () => {
+
+    if (isError) return;
+
     currentInput = currentInput.slice(0, -1);
     result.innerText = currentInput || 0;
     console.log(currentInput)
@@ -41,27 +70,34 @@ const clearAll = () => {
     current_number1 = undefined;
     current_number2 = undefined;
     current_operand = undefined;
+    isError = false;
+    awaitingSecond = false;
+    justEvaluated  = false;
     updateDecimalButton();
+
+    updateExpression("");
 }
 
-const Add = (num1,num2) => {
-    result.innerText = (num1+num2).toFixed(7)
-}
+const Add      = (a, b) => a + b;
+const Subtract = (a, b) => a - b;
+const Multiply = (a, b) => a * b;
+const Divide   = (a, b) => a / b;
 
-const Subtract = (num1,num2) => {
-    result.innerText = (num1 - num2).toFixed(7)
-}
+// const Divide = (num1,num2) => {
+//     if (num2 === 0) { 
+//         result.innerText = "plz dont"; 
+//         isError = true;
+//         return; 
+//     }
+//     result.innerText = (num1 / num2).toFixed(7)
+// }
 
-const Multiply = (num1,num2) => {
-    result.innerText = (num1 * num2).toFixed(7)
-}
-
-const Divide = (num1,num2) => {
-    if (num2 === 0) { result.innerText = "plz dont"; return; }
-    result.innerText = (num1 / num2).toFixed(7)
-}
+const formatResult = (value) => parseFloat(value.toPrecision(10));
 
 const inputDecimal = () => {
+
+    if (isError) return;
+
     if (currentInput.includes(".")) return;
     currentInput += currentInput === "" ? "0." : ".";
     result.innerText = currentInput;
@@ -73,6 +109,15 @@ const updateDecimalButton = () => {
     decimalBtn.disabled = currentInput.includes(".");
 }
 const setOperator = (operator) => {
+
+    if (isError) return;
+
+    if (currentInput === "" && current_number1 !== undefined) {
+        current_operand = operator;
+        updateExpression(`${current_number1} ${operator}`);
+        return;
+    }
+
     if (current_number1 !== undefined) {
         current_number2 = parseFloat(currentInput);
         currentInput = "";
@@ -83,35 +128,54 @@ const setOperator = (operator) => {
         currentInput = "";
     }
     current_operand = operator;
-     updateDecimalButton();
+    awaitingSecond = true;  
+    justEvaluated  = false; 
+    updateDecimalButton();
+
+    updateExpression(`${current_number1} ${operator}`);
 }
 
 const Operate = (operation, num1, num2) => {
-    switch(operation) {
-        case '+':
-            Add(num1, num2)
-            break
-        case '-':
-            Subtract(num1, num2)
-            break
-        case '*':
-            Multiply(num1, num2)
-            break
-        case '/':
-            Divide(num1, num2)
-            break
+
+    if (operation === '/' && num2 === 0) {
+        result.innerText = "plz dont";
+        isError = true;
+        return;
     }
+
+    let value;
+    switch (operation) {
+        case '+': 
+            value = Add(num1, num2);      
+        break;
+        case '-': 
+            value = Subtract(num1, num2); 
+        break;
+        case '*': 
+            value = Multiply(num1, num2); 
+        break;
+        case '/': 
+            value = Divide(num1, num2);   
+        break;
+    }
+
+    result.innerText = formatResult(value);
 }
 
 const calculate=() => {
     if (!currentInput || current_number1 === undefined || !current_operand) return;
     if (current_operand && current_number1 !== undefined) {
         current_number2 = parseFloat(currentInput);
+
+        updateExpression(`${current_number1} ${current_operand} ${current_number2} =`);
+
         Operate(current_operand, current_number1, current_number2);
         currentInput = String(parseFloat(result.innerText));
         
         current_number1 = undefined;
         current_operand = undefined;
+        awaitingSecond = false; 
+        justEvaluated  = true;
         updateDecimalButton();
     }
 }
